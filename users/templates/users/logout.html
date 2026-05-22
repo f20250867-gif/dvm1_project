@@ -1,0 +1,12 @@
+{% extends "home/base.html" %}
+{% block content %}
+<div class="border-top pt-3">
+    <small class="text-muted">
+<form action="{% url 'logout' %}" method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-outline-light">Logout</button>
+</form>
+    </small>.
+
+</div>
+{% endblock content %}

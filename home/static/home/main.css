@@ -1,0 +1,45 @@
+body {
+  background: #ffffff;
+  color: #333333;
+  margin-top: 0;
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #222222;
+}
+
+ul {
+  margin: 0;
+}
+
+.content-section {
+  max-width: 500px;
+  margin: 2rem auto;
+  padding: 20px 30px;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  background: #fafafa;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+legend {
+  font-size: 1.3rem;
+  font-weight: bold;
+}
+
+button[type="submit"] {
+  margin-top: 0.5rem;
+}
+
+.site-header .navbar-nav .nav-link {
+  color: #cbd5db;
+}
+
+.site-header .navbar-nav .nav-link:hover {
+  color: #ffffff;
+}
