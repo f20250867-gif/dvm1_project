@@ -31,8 +31,10 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'trips.apps.TripsConfig',
     'users.apps.UsersConfig',
     'home.apps.HomeConfig',
+    'network.apps.NetworkConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
