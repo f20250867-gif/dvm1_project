@@ -114,12 +114,14 @@ USE_I18N = True
 
 USE_TZ = True
 
-AUTH_USER_MODEL = "user.User"
+AUTH_USER_MODEL = "users.User"
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
 LOGIN_REDIRECT_URL = 'carpool-home'
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'role-redirect' 
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
