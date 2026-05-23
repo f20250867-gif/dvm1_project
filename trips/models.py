@@ -1,8 +1,14 @@
 from django.db import models
-from network.views import Node
 from users.models import User
-#Trip Model
+from network.models import Node
+
 class Trip(models.Model):
+
+    class Status(models.TextChoices):
+        SCHEDULED = 'SCHEDULED', 'Scheduled'
+        ACTIVE    = 'ACTIVE',    'Active'
+        COMPLETED = 'COMPLETED', 'Completed'
+        CANCELLED = 'CANCELLED', 'Cancelled'
 
     driver = models.ForeignKey(
         User,
@@ -12,13 +18,13 @@ class Trip(models.Model):
     start_node = models.ForeignKey(
         Node,
         on_delete=models.CASCADE,
-        related_name="trip_start"
+        related_name='trip_start'
     )
 
     end_node = models.ForeignKey(
         Node,
         on_delete=models.CASCADE,
-        related_name="trip_end"
+        related_name='trip_end'
     )
 
     current_node = models.ForeignKey(
@@ -26,16 +32,21 @@ class Trip(models.Model):
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        related_name="trip_current"
+        related_name='trip_current'
     )
-    route = models.JSONField(null=True, blank=True)#storing the route
-    visited_nodes = models.JSONField(default=list, blank=True)#to keep track of visited nodes during the trip
 
-    max_passengers = models.IntegerField()
+    status = models.CharField(           
+        max_length=20,
+        choices=Status.choices,
+        default=Status.SCHEDULED
+    )
 
+    route          = models.JSONField(default=list, blank=True)   
+    visited_nodes  = models.JSONField(default=list, blank=True)
+    max_passengers  = models.IntegerField()
     available_seats = models.IntegerField()
 
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.driver} {self.start_node}->{self.end_node}"
+        return f"{self.driver} | {self.start_node} → {self.end_node} | {self.status}"

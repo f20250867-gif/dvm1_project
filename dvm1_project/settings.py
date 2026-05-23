@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'trips.apps.TripsConfig',
+    'carpools.apps.CarpoolsConfig',
     'users.apps.UsersConfig',
     'home.apps.HomeConfig',
     'network.apps.NetworkConfig',
