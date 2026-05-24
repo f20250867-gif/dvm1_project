@@ -20,3 +20,14 @@ class Edge(models.Model):
 
     def __str__(self):
         return f"{self.from_node} → {self.to_node}"
+    
+
+class ServiceStatus(models.Model):
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        verbose_name        = 'Service Status'
+        verbose_name_plural = 'Service Status'
+
+    def __str__(self):
+        return 'Active' if self.is_active else 'Suspended'

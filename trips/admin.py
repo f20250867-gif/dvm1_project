@@ -5,4 +5,4 @@ from .models import Trip
 class TripAdmin(admin.ModelAdmin):
     # Allows admin to view all active trips on the network
     list_display = ('id', 'driver', 'start_node', 'end_node', 'current_node', 'available_seats')
-    list_filter = ('driver',)
+    list_filter = ('status',)

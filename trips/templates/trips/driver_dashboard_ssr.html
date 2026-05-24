@@ -1,0 +1,150 @@
+{% extends "home/base.html" %}
+
+{% block content %}
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+{% endif %}
+
+<div class="content-section">
+    <h4>Trip #{{ trip.id }} — {{ trip.start_node }} → {{ trip.end_node }}</h4>
+    <p>
+        <strong>Status:</strong> {{ trip.status }} &nbsp;|&nbsp;
+        <strong>Available Seats:</strong> {{ trip.available_seats }}
+    </p>
+    <a href="{% url 'driver_dashboard' %}" class="btn btn-sm btn-secondary">
+        ← Back to Dashboard
+    </a>
+</div>
+
+<!-- Incoming Requests -->
+<div class="content-section">
+    <h4>Incoming Carpool Requests</h4>
+    {% if incoming_requests %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Passenger</th>
+                    <th>Pickup</th>
+                    <th>Drop</th>
+                    <th>Detour</th>
+                    <th>Fare</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for req in incoming_requests %}
+                <tr>
+                    <td>{{ req.passenger.username }}</td>
+                    <td>{{ req.pickup_node }}</td>
+                    <td>{{ req.drop_node }}</td>
+                    <td>{{ req.detour }} nodes</td>
+                    <td>₹{{ req.fare }}</td>
+                    <td>
+                        <form method="POST" action="{% url 'make-offer-page' req.id %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="trip_id" value="{{ trip.id }}">
+                            <button type="submit" class="btn btn-sm btn-success">
+                                Make Offer
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="text-muted">No matching requests right now.</p>
+    {% endif %}
+</div>
+
+<!-- Pending Offers -->
+<div class="content-section">
+    <h4>Your Pending Offers</h4>
+    {% if pending_offers %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Passenger</th>
+                    <th>Pickup</th>
+                    <th>Drop</th>
+                    <th>Detour</th>
+                    <th>Fare</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for offer in pending_offers %}
+                <tr>
+                    <td>{{ offer.ride_request.passenger.username }}</td>
+                    <td>{{ offer.ride_request.pickup_node }}</td>
+                    <td>{{ offer.ride_request.drop_node }}</td>
+                    <td>{{ offer.detour }} nodes</td>
+                    <td>₹{{ offer.proposed_fare }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="text-muted">No pending offers.</p>
+    {% endif %}
+</div>
+
+<!-- Confirmed Carpools -->
+<div class="content-section">
+    <h4>Confirmed Carpools</h4>
+    {% if confirmed_carpools %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Passenger</th>
+                    <th>Pickup</th>
+                    <th>Drop</th>
+                    <th>Fare</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for offer in confirmed_carpools %}
+                <tr>
+                    <td>{{ offer.ride_request.passenger.username }}</td>
+                    <td>{{ offer.ride_request.pickup_node }}</td>
+                    <td>{{ offer.ride_request.drop_node }}</td>
+                    <td>₹{{ offer.proposed_fare }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="text-muted">No confirmed carpools yet.</p>
+    {% endif %}
+</div>
+
+<!-- Past Requests -->
+<div class="content-section">
+    <h4>Past/Rejected Requests</h4>
+    {% if past_offers %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Passenger</th>
+                    <th>Fare</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for offer in past_offers %}
+                <tr>
+                    <td>{{ offer.ride_request.passenger.username }}</td>
+                    <td>₹{{ offer.proposed_fare }}</td>
+                    <td>{{ offer.status }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="text-muted">No past requests.</p>
+    {% endif %}
+</div>
+
+{% endblock %}

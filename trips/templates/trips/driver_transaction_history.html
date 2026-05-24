@@ -1,0 +1,54 @@
+{% extends "home/base.html" %}
+
+{% block content %}
+
+<div class="content-section">
+    <h3>Earnings History</h3>
+    <p>Total Earnings: <strong>₹{{ request.user.wallet_balance }}</strong></p>
+    <a href="{% url 'driver_dashboard' %}" class="btn btn-secondary mb-3">
+        ← Back to Dashboard
+    </a>
+</div>
+
+<div class="content-section">
+    {% if transactions %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Type</th>
+                    <th>Amount</th>
+                    <th>Trip</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for txn in transactions %}
+                <tr>
+                    <td>{{ txn.id }}</td>
+                    <td>
+                        {% if txn.transaction_type == 'earning' %}
+                            <span class="badge bg-success">Earning</span>
+                        {% else %}
+                            <span class="badge bg-secondary">{{ txn.transaction_type }}</span>
+                        {% endif %}
+                    </td>
+                    <td>₹{{ txn.amount }}</td>
+                    <td>
+                        {% if txn.trip %}
+                            Trip #{{ txn.trip.id }}
+                        {% else %}
+                            —
+                        {% endif %}
+                    </td>
+                    <td>{{ txn.created_at|date:"d M Y, H:i" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="text-muted">No earnings yet.</p>
+    {% endif %}
+</div>
+
+{% endblock %}

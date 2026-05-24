@@ -13,3 +13,4 @@ class EdgeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Edge
         fields = "__all__"
+        depth  = 1

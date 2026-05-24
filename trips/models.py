@@ -41,12 +41,14 @@ class Trip(models.Model):
         default=Status.SCHEDULED
     )
 
-    route          = models.JSONField(default=list, blank=True)   
-    visited_nodes  = models.JSONField(default=list, blank=True)
-    max_passengers  = models.IntegerField()
+    route = models.JSONField(default=list, blank=True)   
+    visited_nodes = models.JSONField(default=list, blank=True)
+    max_passengers = models.IntegerField()
     available_seats = models.IntegerField()
 
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.driver} | {self.start_node} → {self.end_node} | {self.status}"
+
+

@@ -3,6 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from django.db import models
 from .models import Node, Edge
 from .serializers import NodeSerializer, EdgeSerializer
 
@@ -104,3 +105,7 @@ class EdgeDetailView(APIView):
             return Response({'error': 'Edge not found'}, status=status.HTTP_404_NOT_FOUND)
         edge.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+    class Meta:
+        verbose_name = 'Service Status'

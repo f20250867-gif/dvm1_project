@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 from users import views as user_views
 from django.contrib.auth import views as auth_views
+from rest_framework.authtoken.views import obtain_auth_token
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -29,4 +30,6 @@ urlpatterns = [
     path('network/', include('network.urls')),
     path('driver/', include('trips.urls')),       
     path('passenger/', include('carpools.urls')), 
+    path('api/token/', obtain_auth_token, name='api-token'),
+    path('accounts/', include('allauth.urls')),
 ]

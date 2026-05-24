@@ -5,4 +5,5 @@ class TripSerializer(serializers.ModelSerializer):
     class Meta:
         model = Trip
         fields = "__all__"
-        read_only_fields = ['driver', 'route', 'visited_nodes', 'available_seats', 'current_node','status', 'created at']
+        read_only_fields = ['driver', 'route', 'visited_nodes', 'available_seats', 'current_node','status', 'created_at']
+
