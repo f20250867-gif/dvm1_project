@@ -15,7 +15,8 @@ class User(AbstractUser):
     role = models.CharField(
         max_length=50,
         choices=Role.choices,
-        default=Role.PASSENGER
+        default='',
+        blank = True
     )
 
     wallet_balance = models.DecimalField(    
@@ -28,8 +29,9 @@ class User(AbstractUser):
         if not self.pk and not self.role:
             self.role = self.base_role
         super().save(*args, **kwargs)
-        self._assign_group()
-        self._create_profile()
+        if self.role:
+            self._assign_group()
+            self._create_profile()
 
     def _assign_group(self):
         if self.role == self.Role.DRIVER:

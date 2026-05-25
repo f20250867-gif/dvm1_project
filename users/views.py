@@ -27,7 +27,7 @@ def register(request):
 def role_redirect(request):
     user = request.user
 
-    if not user.role or user.role == '':
+    if not user.role or user.role == '':  
         return redirect('select-role')
 
     if user.role == 'DRIVER':
