@@ -13,7 +13,8 @@ CSRF_TRUSTED_ORIGINS = [
     "http://127.0.0.1:1337",
 ]
 
-SITE_ID = 2 
+SITE_ID = 3
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = "http"
 
 INSTALLED_APPS = [
     'trips.apps.TripsConfig',
@@ -57,6 +58,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'allauth.account.middleware.AccountMiddleware',
 ]
+USE_X_FORWARDED_HOST = True
+SOCIALACCOUNT_STORE_TOKENS = True
 
 ROOT_URLCONF = 'dvm1_project.urls'
 
@@ -140,6 +143,7 @@ CRISPY_TEMPLATE_PACK           = 'bootstrap5'
 
 LOGIN_URL           = 'login'
 LOGIN_REDIRECT_URL  = '/role-redirect/'   
+ACCOUNT_SIGNUP_REDIRECT_URL = "/role-redirect/"
 LOGOUT_REDIRECT_URL = '/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
