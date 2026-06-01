@@ -15,6 +15,8 @@ RUN pip install -r requirements.txt
 
 # copy project
 COPY . .
+#command for applying css
+RUN python manage.py collectstatic --noinput
 
 # copy entrypoint
 COPY entrypoint.sh .

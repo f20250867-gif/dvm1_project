@@ -20,6 +20,7 @@ from users import views as user_views
 from django.contrib.auth import views as auth_views
 from rest_framework.authtoken.views import obtain_auth_token
 from users import views as user_views
+from . views import debug_host
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -34,4 +35,5 @@ urlpatterns = [
     path('api/token/', obtain_auth_token, name='api-token'),
     path('accounts/', include('allauth.urls')),
     path('select-role/', user_views.select_role, name='select-role'),
+    path("debug-host/", debug_host),
 ]

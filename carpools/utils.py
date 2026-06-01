@@ -1,51 +1,83 @@
-from .models import RideOffer, RideRequest
+from .models import RideOffer
 from network.models import Edge
 from network.utils import shortest_path
 from trips.models import Trip
 
 
 def get_remaining_route(trip):
-    route = trip.route or []
-    current = trip.current_node_id
+    route   = trip.route or []
+    visited = trip.visited_nodes or []
 
-    if current not in route:
+    if not visited or not route:
         return route
 
-    idx = route.index(current)
-    return route[idx:]  # from current node to end
+    last_visited = visited[-1]
+
+    try:
+        idx = route.index(last_visited)
+
+        # if trip hasn't started yet
+        # include current node in remaining
+        if trip.status == 'SCHEDULED':
+            return route[idx:]      
+
+        # if trip is active
+        # driver already left current node
+        return route[idx + 1:]      
+
+    except ValueError:
+        return route
 
 
 def is_request_matching_trip(trip, pickup_node_id, drop_node_id):
-    
-    # 1. check available seats
+
+    #available seats checking
     if trip.available_seats <= 0:
         return False
 
-    # 2. check trip not already completed
+    #trip not finished cheking
     if trip.current_node_id == trip.end_node_id:
         return False
 
+    # remaining route checking 
     remaining_route = get_remaining_route(trip)
 
     if not remaining_route:
         return False
 
-    # 3. get all nodes within 2 hops of remaining route
-    nearby_nodes = set()
-    for node_id in remaining_route:
-        nearby_nodes.add(node_id)
+    # both pickup AND drop must be exactly on remaining route
+    if pickup_node_id not in remaining_route:
+        return False        
 
-        edges_1 = Edge.objects.filter(from_node_id=node_id).values_list('to_node_id', flat=True)
-        for n1 in edges_1:
-            nearby_nodes.add(n1)
+    if drop_node_id not in remaining_route:
+        return False       
 
-            edges_2 = Edge.objects.filter(from_node_id=n1).values_list('to_node_id', flat=True)
-            for n2 in edges_2:
-                nearby_nodes.add(n2)
+    # pickup must come BEFORE drop in route
+    pickup_index = remaining_route.index(pickup_node_id)
+    drop_index   = remaining_route.index(drop_node_id)
 
-    # 4. both pickup and drop must be within 2 nodes of route
-    return pickup_node_id in nearby_nodes and drop_node_id in nearby_nodes
+    if pickup_index >= drop_index:
+        return False        
 
+    return True            
+
+def find_matching_trips(pickup_node_id, drop_node_id):
+    matches = []
+
+    active_trips = Trip.objects.filter(
+        status__in=['SCHEDULED', 'ACTIVE'],   
+        available_seats__gt=0
+    )
+
+    for trip in active_trips:
+        if is_request_matching_trip(trip, pickup_node_id, drop_node_id):
+            matches.append({
+                'trip_id':         trip.id,
+                'driver':          trip.driver.username,
+                'status':          trip.status,
+                'remaining_route': get_remaining_route(trip)
+            })
+    return matches
 
 def calculate_all_fares(trip, new_route, all_requests):
     UNIT_PRICE = 10.0
@@ -116,38 +148,20 @@ def calculate_detour_and_fare(trip, ride_request):
 
     new_remaining_dist = dist_to_pickup + dist_passenger + dist_to_end
 
-    # 3. detour = difference
+    #detour = difference
     detour    = max(0, new_remaining_dist - original_remaining_dist)
 
-    # 4. construct new full route
+    #construct new full route
     new_route = path_to_pickup[:-1] + path_passenger[:-1] + path_to_end
 
-    # 5. get all confirmed passengers + new requesting passenger
+    #get all confirmed passengers + new requesting passenger
     accepted_offers     = RideOffer.objects.filter(trip=trip, status='accepted')
     confirmed_requests  = [offer.ride_request for offer in accepted_offers]
     all_requests        = confirmed_requests + [ride_request]
 
-    # 6. calculate fare
+    #calculate fare
     all_fares      = calculate_all_fares(trip, new_route, all_requests)
     passenger_fare = all_fares.get(ride_request.id, 0.0)
 
     return round(detour, 2), round(passenger_fare, 2)
 
-def find_matching_trips(pickup_node_id, drop_node_id):
-    matches = []
-
-    # ← include both SCHEDULED and ACTIVE trips
-    active_trips = Trip.objects.filter(
-        status__in=['SCHEDULED', 'ACTIVE'],   # ← key change
-        available_seats__gt=0
-    )
-
-    for trip in active_trips:
-        if is_request_matching_trip(trip, pickup_node_id, drop_node_id):
-            matches.append({
-                'trip_id':         trip.id,
-                'driver':          trip.driver.username,
-                'status':          trip.status,
-                'remaining_route': get_remaining_route(trip)
-            })
-    return matches

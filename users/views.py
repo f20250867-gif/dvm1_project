@@ -9,7 +9,6 @@ from rest_framework.response import Response
 from rest_framework import status                   
 from rest_framework.permissions import IsAuthenticated
 
-# Create your views here.
 def register(request):
     if request.method == 'POST':
         form = form = UserRegisterForm(request.POST)
@@ -28,8 +27,7 @@ def role_redirect(request):
     user = request.user
 
     if not user.role or user.role == '':  
-        return redirect('select-role')
-
+        return redirect('select-role')  
     if user.role == 'DRIVER':
         return redirect('driver_dashboard')
     elif user.role == 'PASSENGER':

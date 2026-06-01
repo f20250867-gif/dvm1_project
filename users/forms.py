@@ -20,9 +20,9 @@ class UserRegisterForm(UserCreationForm):
         for field in self.fields.values():
             field.widget.attrs['class'] = 'form-control'
 
-    def save(self, commit=True):                        # ← add this
+    def save(self, commit=True):                        
         user      = super().save(commit=False)
-        user.role = self.cleaned_data['role']           # ← explicitly set role
+        user.role = self.cleaned_data['role']           
         if commit:
             user.save()
         return user

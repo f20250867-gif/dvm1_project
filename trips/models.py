@@ -12,7 +12,10 @@ class Trip(models.Model):
 
     driver = models.ForeignKey(
         User,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        limit_choices_to={'role': 'DRIVER'},
+        related_name='trips'
+
     )
 
     start_node = models.ForeignKey(

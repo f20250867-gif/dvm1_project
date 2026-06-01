@@ -1,0 +1,6 @@
+dvm1_project/id.txt
+.env
+*.pyc
+__pycache__/
+db.sqlite3
+staticfiles/

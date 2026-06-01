@@ -1,4 +1,3 @@
-# network/utils.py
 import heapq
 from .models import Edge  
 

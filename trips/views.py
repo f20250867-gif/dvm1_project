@@ -10,23 +10,12 @@ from network.models import Node
 from django.contrib import messages
 from django.shortcuts import render,redirect
 from django.contrib.auth.decorators import login_required
-from users.models import Transaction
-
-
 from carpools.models import RideRequest,RideOffer
 from carpools.serializers import RideRequestSerializer
 from carpools.utils import is_request_matching_trip, calculate_detour_and_fare
 
 # Create your tests here.
 
-@login_required
-def driver_dashboard(request):
-    nodes = Node.objects.all()
-    trips = Trip.objects.filter(driver=request.user).order_by('-created_at')
-    return render(request, 'trips/driver_dashboard.html', {
-        'nodes': nodes,
-        'trips': trips
-    })
 
 class TripView(APIView):
     permission_classes = [IsAuthenticated]

@@ -1,5 +1,6 @@
 {% extends "home/base.html" %}
 {% load crispy_forms_tags %}
+{% load socialaccount %}
 
 {% block content %}
 <div class="container mt-4">
@@ -24,10 +25,9 @@
           </div>
 
           <!-- GOOGLE LOGIN -->
-          <a href="/accounts/google/login/?next=/role-redirect/"
-             class="btn btn-outline-dark w-100 d-flex align-items-center justify-content-center gap-2">
-            Continue with Google
-          </a>
+              <a href="{% provider_login_url 'google' %}">
+                  Login with Google
+              </a>
 
           <div class="border-top pt-3 mt-3 text-center">
             <small class="text-muted">

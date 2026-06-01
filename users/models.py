@@ -10,7 +10,7 @@ class User(AbstractUser):
         DRIVER = "DRIVER","Driver"
         PASSENGER = "PASSENGER", "Passenger"
 
-    base_role = Role.PASSENGER
+    
 
     role = models.CharField(
         max_length=50,
@@ -26,9 +26,8 @@ class User(AbstractUser):
     )
 
     def save(self, *args, **kwargs):         
-        if not self.pk and not self.role:
-            self.role = self.base_role
         super().save(*args, **kwargs)
+
         if self.role:
             self._assign_group()
             self._create_profile()
@@ -53,8 +52,6 @@ class User(AbstractUser):
 
 class DriverProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='driver_profile')
-    license_number = models.CharField(max_length=50, blank=True, null=True)
-    vehicle_number = models.CharField(max_length=50, blank=True, null=True)
     is_available = models.BooleanField(default=True)
 
     def __str__(self):

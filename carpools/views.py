@@ -9,7 +9,7 @@ from rest_framework.permissions import IsAuthenticated
 from network.models import Node,ServiceStatus
 from trips.models import Trip
 from .models import RideRequest, RideOffer
-from .utils import calculate_detour_and_fare
+from .utils import calculate_detour_and_fare,find_matching_trips
 from users.models import Transaction
 from decimal import Decimal
 
@@ -37,7 +37,6 @@ def passenger_dashboard(request):
             messages.error(request, 'Pickup and drop cannot be the same.')
         else:
             # check matching trips exist including active ones
-            from .utils import find_matching_trips
             matches = find_matching_trips(int(pickup_id), int(drop_id))
 
             if not matches:

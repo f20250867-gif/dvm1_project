@@ -1,6 +1,6 @@
-{% extends "home/base.html" %}
 {% load crispy_forms_tags %}
-
+{% load socialaccount %}
+{% extends "home/base.html" %}
 {% block content %}
 <div class="container mt-4">
   <div class="row justify-content-center">
@@ -23,11 +23,11 @@
             <hr class="flex-grow-1">
           </div>
 
-          <!-- GOOGLE SIGNUP -->
-          <a href="/accounts/google/login/?next=/role-redirect/"
-             class="btn btn-outline-dark w-100 d-flex align-items-center justify-content-center gap-2">
-            Sign up with Google
-          </a>
+           //GOOGLE SIGNUP 
+              <a href="{% provider_login_url 'google' process='login' next='/role-redirect/' %}"
+                class="btn btn-outline-dark w-100 d-flex align-items-center justify-content-center gap-2">
+                  Sign up with Google
+              </a>
 
           <div class="border-top pt-3 mt-3 text-center">
             <small class="text-muted">
