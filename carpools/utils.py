@@ -5,61 +5,46 @@ from trips.models import Trip
 
 
 def get_remaining_route(trip):
-    route   = trip.route or []
-    visited = trip.visited_nodes or []
+    route = trip.route or []
+    current = trip.current_node_id
 
-    if not visited or not route:
+    if current not in route:
         return route
 
-    last_visited = visited[-1]
-
-    try:
-        idx = route.index(last_visited)
-
-        # if trip hasn't started yet
-        # include current node in remaining
-        if trip.status == 'SCHEDULED':
-            return route[idx:]      
-
-        # if trip is active
-        # driver already left current node
-        return route[idx + 1:]      
-
-    except ValueError:
-        return route
+    idx = route.index(current)
+    return route[idx:]  # from current node to end
 
 
 def is_request_matching_trip(trip, pickup_node_id, drop_node_id):
-
-    #available seats checking
+    
+    # 1. check available seats
     if trip.available_seats <= 0:
         return False
 
-    #trip not finished cheking
+    # 2. check trip not already completed
     if trip.current_node_id == trip.end_node_id:
         return False
 
-    # remaining route checking 
     remaining_route = get_remaining_route(trip)
 
     if not remaining_route:
         return False
 
-    # both pickup AND drop must be exactly on remaining route
-    if pickup_node_id not in remaining_route:
-        return False        
+    # 3. get all nodes within 2 hops of remaining route
+    nearby_nodes = set()
+    for node_id in remaining_route:
+        nearby_nodes.add(node_id)
 
-    if drop_node_id not in remaining_route:
-        return False       
+        edges_1 = Edge.objects.filter(from_node_id=node_id).values_list('to_node_id', flat=True)
+        for n1 in edges_1:
+            nearby_nodes.add(n1)
 
-    # pickup must come BEFORE drop in route
-    pickup_index = remaining_route.index(pickup_node_id)
-    drop_index   = remaining_route.index(drop_node_id)
+            edges_2 = Edge.objects.filter(from_node_id=n1).values_list('to_node_id', flat=True)
+            for n2 in edges_2:
+                nearby_nodes.add(n2)
 
-    if pickup_index >= drop_index:
-        return False        
-
-    return True            
+    # 4. both pickup and drop must be within 2 nodes of route
+    return pickup_node_id in nearby_nodes and drop_node_id in nearby_nodes
 
 def find_matching_trips(pickup_node_id, drop_node_id):
     matches = []
