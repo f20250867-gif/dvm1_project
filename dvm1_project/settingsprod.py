@@ -100,7 +100,7 @@ DATABASES = {
         "ENGINE": 'django.db.backends.postgresql' ,
         "NAME": 'dvm1_project',
         "USER": 'dvm1_projectuser',
-        "PASSWORD": os.environ.get("SQL_PASSWORD"),
+        "PASSWORD": "nikunj@11DIGITALOCEAN",
         "HOST": os.environ.get("SQL_HOST"),
         "PORT": os.environ.get("SQL_PORT"),
     }
