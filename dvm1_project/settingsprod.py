@@ -1,5 +1,10 @@
 from pathlib import Path
 import os
+from dotenv import load_dotenv
+
+# This actually reads the file and loads the variables!
+load_dotenv()
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get("SECRET_KEY", " ")
@@ -100,9 +105,9 @@ DATABASES = {
         "ENGINE": 'django.db.backends.postgresql' ,
         "NAME": 'dvm1_project',
         "USER": 'dvm1_projectuser',
-        "PASSWORD": "nikunj@11DIGITALOCEAN",
-        "HOST": os.environ.get("SQL_HOST"),
-        "PORT": os.environ.get("SQL_PORT"),
+        "PASSWORD": os.environ.get('SQL_PASSWORD' , ''),
+        "HOST": 'localhost',
+        "PORT": '',
     }
 }
 
