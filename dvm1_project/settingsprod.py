@@ -11,7 +11,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY", " ")
 
 DEBUG = False
 
-ALLOWED_HOSTS = ['dvm1_project.codewithnikunj.com']
+ALLOWED_HOSTS = ['dvm1_project.codewithnikunj.com', '168.144.124.93']
 
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:1337",
