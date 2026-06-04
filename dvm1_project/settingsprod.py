@@ -106,7 +106,7 @@ DATABASES = {
         "NAME": 'dvm1_project',
         "USER": 'dvm1_projectuser',
         "PASSWORD": os.environ.get('SQL_PASSWORD' , ''),
-        "HOST": 'localhost',
+        "HOST": 'db',
         "PORT": '',
     }
 }
